@@ -1,0 +1,56 @@
+CREATE TABLE Cliente (
+    ID SERIAL PRIMARY KEY,
+    Nome VARCHAR(100),
+    CPF_CNPJ VARCHAR(20) UNIQUE,
+    Email VARCHAR(100) UNIQUE,
+    Telefone VARCHAR(15),
+    Endereco TEXT
+);
+
+CREATE TABLE Categoria (
+    ID SERIAL PRIMARY KEY,
+    Nome VARCHAR(50) UNIQUE
+);
+
+CREATE TABLE Produto (
+    ID SERIAL PRIMARY KEY,
+    Nome VARCHAR(100),
+    Descricao TEXT,
+    Preco DECIMAL(10,2),
+    Quantidade_Estoque INT,
+    Categoria_ID INT REFERENCES Categoria(ID)
+);
+
+CREATE TABLE Pedido (
+    ID SERIAL PRIMARY KEY,
+    Cliente_ID INT REFERENCES Cliente(ID),
+    Data_Pedido TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    Status_Pedido VARCHAR(50),
+    Valor_Total DECIMAL(10,2)
+);
+
+CREATE TABLE Item_Pedido (
+    ID SERIAL PRIMARY KEY,
+    Pedido_ID INT REFERENCES Pedido(ID),
+    Produto_ID INT REFERENCES Produto(ID),
+    Quantidade INT,
+    Preco_Unitario DECIMAL(10,2),
+    Subtotal DECIMAL(10,2)
+);
+
+CREATE TABLE Pagamento (
+    ID SERIAL PRIMARY KEY,
+    Pedido_ID INT REFERENCES Pedido(ID),
+    Tipo_Pagamento VARCHAR(20),
+    Status_Pagamento VARCHAR(50),
+    Data_Pagamento TIMESTAMP
+);
+
+CREATE TABLE Entrega (
+    ID SERIAL PRIMARY KEY,
+    Pedido_ID INT REFERENCES Pedido(ID),
+    Transportadora VARCHAR(100),
+    Codigo_Rastreio VARCHAR(50),
+    Data_Envio TIMESTAMP,
+    Status_Entrega VARCHAR(50)
+);
